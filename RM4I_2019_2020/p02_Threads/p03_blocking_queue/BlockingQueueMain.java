@@ -1,4 +1,4 @@
-package p05_blocking_queue;
+package p03_blocking_queue;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

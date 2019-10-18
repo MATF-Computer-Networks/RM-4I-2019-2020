@@ -1,14 +1,14 @@
-package p02_bank_unsynced;
+package p02_bank;
 
 import java.util.Arrays;
 
-public class Bank {
+public class DefaultBank implements IBank {
 
     // Contains an array of "accounts" - each account has some credit value
     private final int[] accounts;
 
 
-    public Bank(int accountsNum, int initialBalance) {
+    public DefaultBank(int accountsNum, int initialBalance) {
         this.accounts = new int[accountsNum];
         Arrays.fill(this.accounts, initialBalance);
     }

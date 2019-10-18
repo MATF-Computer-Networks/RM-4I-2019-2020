@@ -6,3 +6,5 @@ account to another. Test your class by calling multiple threads (simulating clie
 between random accounts.
 
 Note: Keep track of the total balance. Why does it change?
+
+Fix: Try out different synchronization mechanisms on the transfer method.

@@ -1,11 +1,11 @@
-package p03_bank_synced_locks;
+package p02_bank;
 
 import java.util.Arrays;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class LockedBank {
+public class LockedBank implements IBank {
 
     private final int[] accounts;
 
@@ -32,7 +32,7 @@ public class LockedBank {
 
     // The bank provides an option to transfer the funds between accounts
     // This function will be called from different threads, so there will be race condition
-    public void transfer(int from, int to, int amount) throws InterruptedException {
+    public void transfer(int from, int to, int amount) {
         // Remember this try-finally pattern! We must make sure to unlock in case of exception
         this.lock.lock();
         try {
@@ -40,7 +40,11 @@ public class LockedBank {
                 // If there are no funds on the account, the thread is blocked here
                 // and waiting for a signal that a transfer is made - then we re-check
                 // if there is enough funds on the account
-                this.insufficientFunds.await();
+                try {
+                    this.insufficientFunds.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
                 // await() method REQUIRES the lock to be held during the call, it will
                 // atomically unlock and wait on the condition (that is why it is safe

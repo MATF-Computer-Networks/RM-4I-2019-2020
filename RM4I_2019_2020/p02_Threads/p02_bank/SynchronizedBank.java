@@ -1,11 +1,8 @@
-package p04_bank_synchronized;
+package p02_bank;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
-public class SynchronizedBank {
+public class SynchronizedBank implements IBank {
     private final int[] accounts;
 
 
@@ -29,13 +26,17 @@ public class SynchronizedBank {
         is a syntax error. Synchronizing constructors doesn't make sense, because only the thread that
         creates an object should have access to it while it is being constructed.
      */
-    public synchronized void transfer(int from, int to, int amount) throws InterruptedException {
-
+    public synchronized void transfer(int from, int to, int amount) {
         // We want to wait here, as in the previous example. But now we do not have a condition object to wait for.
         // So what we do here, is use the wait() method defined in the Object class (which is the base
         // for all classes). wait() blocks until a signal is received (we will send it via notifyAll() method)
-        while (this.accounts[from] < amount)
-            this.wait();
+        while (this.accounts[from] < amount) {
+            try {
+                this.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         System.out.println(Thread.currentThread());
         this.accounts[from] -= amount;

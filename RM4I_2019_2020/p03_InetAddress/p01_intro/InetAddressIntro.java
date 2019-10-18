@@ -102,19 +102,6 @@ public class InetAddressIntro {
 			www.math.rs/147.91.66.10
 			www.matf.bg.ac.rs/147.91.66.10
 		 */
-
-		/* Useful CLI tools (Linux):
-		- ping
-			ping google.com
-		- traceroute (tracert on Windows)
-			traceroute google.com
-		- dig
-			dig google.com
-		- nslookup
-			nslookup google.com
-		- host
-			host google.com
-		 */
 	}
 
 }

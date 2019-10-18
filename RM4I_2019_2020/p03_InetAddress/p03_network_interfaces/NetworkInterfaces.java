@@ -44,11 +44,6 @@ public class NetworkInterfaces {
 		} catch (SocketException ex) {
 			ex.printStackTrace();
 		}
-
-		/* Useful CLI tools (Linux):
-		- ip
-			ip addr
-		 */
 	}
 
 }
