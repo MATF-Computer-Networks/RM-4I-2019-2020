@@ -8,6 +8,7 @@
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p02_Threads_Extra" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p03_InetAddress" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p04_URL_URLConnection" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p05_TCP_Sockets" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
