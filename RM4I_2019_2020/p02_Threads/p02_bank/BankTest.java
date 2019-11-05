@@ -1,6 +1,6 @@
 package p02_bank;
 
-public class BankTest {
+class BankTest {
     private static final int ACCOUNTS = 5;
     private static final int STARTING_BALANCE = 1000000;
 

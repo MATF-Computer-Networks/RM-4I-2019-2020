@@ -7,7 +7,7 @@ import java.net.URL;
 import java.util.Random;
 import java.util.Scanner;
 
-public class QueryBuilderTest {
+class QueryBuilderTest {
 
 	public static void main(String[] args) {
 		int jokeId = new Random().nextInt(500) + 1;

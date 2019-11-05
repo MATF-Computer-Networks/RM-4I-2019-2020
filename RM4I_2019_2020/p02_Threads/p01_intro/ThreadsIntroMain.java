@@ -1,6 +1,6 @@
 package p01_intro;
 
-public class ThreadsIntroMain {
+class ThreadsIntroMain {
 
     // There are two ways to run something in a different thread in Java
     //      1. extend Thread class

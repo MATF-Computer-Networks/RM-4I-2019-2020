@@ -2,7 +2,7 @@ package p02_bank;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class TransferRunnable implements Runnable {
+class TransferRunnable implements Runnable {
     // We do not want to clog other threads, right?
     private static final int MAX_TRANSFER_DELAY = 2;
 

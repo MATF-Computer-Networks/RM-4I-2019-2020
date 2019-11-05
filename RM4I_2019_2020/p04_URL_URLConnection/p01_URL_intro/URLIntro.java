@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 
-public class URLIntro {
+class URLIntro {
 	
 	public static void main(String[] args) {
 		// The syntax of a URL is:

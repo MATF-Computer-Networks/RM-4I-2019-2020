@@ -10,7 +10,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 
-public class Poster {
+class Poster {
 
 	private URL url;
 	private QueryBuilder query;

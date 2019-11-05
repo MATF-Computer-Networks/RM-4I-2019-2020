@@ -6,7 +6,7 @@ import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class BlockingQueueMain {
+class BlockingQueueMain {
     private static final int FILE_QUEUE_SIZE = 10;
     private static final int THREADS_NUM = 5;
 

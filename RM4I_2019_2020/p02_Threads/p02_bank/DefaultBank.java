@@ -2,7 +2,7 @@ package p02_bank;
 
 import java.util.Arrays;
 
-public class DefaultBank implements IBank {
+class DefaultBank implements IBank {
 
     // Contains an array of "accounts" - each account has some credit value
     private final int[] accounts;

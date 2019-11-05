@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class HostLookup {
+class HostLookup {
 
 	public static void main(String[] args) {
 

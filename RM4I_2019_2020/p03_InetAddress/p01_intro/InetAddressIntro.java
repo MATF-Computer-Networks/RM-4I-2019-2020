@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 
-public class InetAddressIntro {
+class InetAddressIntro {
 
 	/*
 		Devices connected to the Internet are called nodes. Nodes that are computers are called

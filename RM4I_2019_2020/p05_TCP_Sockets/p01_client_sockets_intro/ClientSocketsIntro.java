@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class ClientSocketsIntro {
+class ClientSocketsIntro {
 
 	/* A socket is a connection between two hosts. It can perform seven basic operations:
 		• Connect to a remote machine

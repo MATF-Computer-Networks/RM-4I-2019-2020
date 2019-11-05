@@ -3,7 +3,7 @@ package p05_pooled_weblog;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-public class PooledWeblogTest {
+class PooledWeblogTest {
 
 	public static void main(String[] args) throws FileNotFoundException {
 

@@ -6,7 +6,7 @@ import java.net.SocketException;
 import java.util.Comparator;
 import java.util.Enumeration;
 
-public class NetworkInterfaces {
+class NetworkInterfaces {
 
 	// https://docs.oracle.com/javase/tutorial/networking/nifs/listing.html
 	

@@ -1,6 +1,6 @@
 package p01_intro;
 
-public class RaceConditionMain {
+class RaceConditionMain {
 
     private static int x = 0;
     private static int LIMIT = 100000000;

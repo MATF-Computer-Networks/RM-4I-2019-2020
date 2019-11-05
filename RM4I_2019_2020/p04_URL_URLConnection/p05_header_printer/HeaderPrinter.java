@@ -5,7 +5,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Scanner;
 
-public class HeaderPrinter {
+class HeaderPrinter {
 
 	// What are header fields? https://en.wikipedia.org/wiki/List_of_HTTP_header_fields
 	// https://www.w3schools.com/tags/ref_httpmethods.asp

@@ -5,7 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 import java.util.zip.GZIPInputStream;
 
-public class Main {
+class Main {
 
     @SuppressWarnings("unused")
     public static void main(String[] args) {

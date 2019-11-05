@@ -5,7 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerSocketsIntro {
+class ServerSocketsIntro {
 
     public static void main(String[] args) {
         int port = 9000;
@@ -24,6 +24,7 @@ public class ServerSocketsIntro {
             server.bind(new InetSocketAddress(port));
 
             // Usually servers are infinite loops
+            //noinspection InfiniteLoopStatement
             while (true) {
                 // Accept client
                 Socket client = server.accept();

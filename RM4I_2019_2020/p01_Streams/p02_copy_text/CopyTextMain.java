@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
-public class CopyTextMain {
+class CopyTextMain {
 
     public static void main(String[] args) {
 

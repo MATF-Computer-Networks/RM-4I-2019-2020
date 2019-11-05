@@ -54,7 +54,7 @@ class TimeClient {
 			//   				Shift: 0x0000AB00 -> OR: 0x0000ABCD
 			//   3rd iteration: We receive 0xEF. Our current result is 0x0000ABCD.
 			//   				Shift: 0x00ABCD00 -> OR: 0x00ABCDEF
-			//   4th iteration: We receive 0x12. Our current result is 0x00000000.
+			//   4th iteration: We receive 0x12. Our current result is 0x00ABCDEF.
 			//   				Shift: 0xABCDEF00 -> OR: 0xABCDEF12
 			//
 			// ( btw almost wrote 0xGH and made up new hex system like 007 @ 0:25:

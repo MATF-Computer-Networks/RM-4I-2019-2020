@@ -3,7 +3,7 @@ package p05_print_streams;
 import java.io.*;
 import java.util.Scanner;
 
-public class PrintStreamMain {
+class PrintStreamMain {
 
     public static void main(String[] args) {
 

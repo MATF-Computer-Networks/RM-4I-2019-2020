@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.List;
 
-public class LookupRunnable implements Runnable {
+class LookupRunnable implements Runnable {
 	private PooledWeblog log;
 	private final List<String> entries;
 

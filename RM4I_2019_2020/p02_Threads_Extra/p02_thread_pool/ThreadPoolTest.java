@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 
-public class ThreadPoolTest {
+class ThreadPoolTest {
 
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);

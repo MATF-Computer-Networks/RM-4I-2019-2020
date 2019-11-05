@@ -14,7 +14,7 @@ import java.util.List;
 // This class has the task to process the log file line-by-line and use
 // threads which will process one line at a time. The log file is provided
 // via InputStream and the output will be sent to a PrintStream
-public class PooledWeblog {
+class PooledWeblog {
     private BufferedReader in;
     private BufferedWriter out;
     private int numOfThreads;
@@ -56,13 +56,12 @@ public class PooledWeblog {
                 // in size. We do not want for our list to too become large so we wait
                 // a bit if the list size is greater than threads amount so threads
                 // can catch up
-                if (this.entries.size() > this.numOfThreads) {
+                while (this.entries.size() > this.numOfThreads) {
                     try {
                         Thread.sleep((long) (1000.0 / this.numOfThreads));
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                    continue;
                 }
 
                 // We can operate on synchronized collections using a synchronized block

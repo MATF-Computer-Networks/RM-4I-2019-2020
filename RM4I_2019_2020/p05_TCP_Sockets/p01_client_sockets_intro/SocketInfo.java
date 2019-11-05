@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 
-public class SocketInfo {
+class SocketInfo {
 
 	public static void main(String[] args) {
 		try (Socket sock = new Socket("www.matf.bg.ac.rs", 80)) {

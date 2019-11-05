@@ -5,7 +5,7 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 
-public class UnknownContentTypeGetter {
+class UnknownContentTypeGetter {
 
 	private static final String URL_STRING = "https://helloacm.com/api/random/?n=128";
 

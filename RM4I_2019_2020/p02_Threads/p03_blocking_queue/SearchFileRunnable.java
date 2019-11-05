@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
-public class SearchFileRunnable implements Runnable {
+class SearchFileRunnable implements Runnable {
 
     private BlockingQueue<Path> queue;
     private String keyword;

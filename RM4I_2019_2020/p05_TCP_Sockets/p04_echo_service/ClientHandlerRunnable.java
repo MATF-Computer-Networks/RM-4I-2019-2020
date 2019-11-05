@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class ClientHandlerRunnable implements Runnable {
+class ClientHandlerRunnable implements Runnable {
     private Socket client;
 
 
@@ -25,6 +25,7 @@ public class ClientHandlerRunnable implements Runnable {
                     new OutputStreamWriter(this.client.getOutputStream(), StandardCharsets.UTF_8)
                 )
         ) {
+            // Waits for data and reads it in until connection dies
             // readLine() blocks until the server receives a new line from client
             // readline() will return null if client closes connection
             String s;

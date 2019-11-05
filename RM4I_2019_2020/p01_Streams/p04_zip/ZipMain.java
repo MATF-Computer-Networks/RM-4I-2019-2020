@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.zip.GZIPOutputStream;
 
-public class ZipMain {
+class ZipMain {
 
     public static void main(String[] args) {
         try {

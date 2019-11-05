@@ -4,7 +4,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 
-public class LoopBackInterface {
+class LoopBackInterface {
 
 	// The loopback device is a special, virtual network interface that
 	// your computer uses to communicate with itself. It is used mainly

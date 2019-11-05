@@ -6,7 +6,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
 
-public class ConditionalDownloader {
+class ConditionalDownloader {
 	
 	private static final long MILLISECONDS_PER_DAY = 24 * 60 * 60 * 1000;
 	private static final String URL_STRING = "http://www.matf.bg.ac.rs/";

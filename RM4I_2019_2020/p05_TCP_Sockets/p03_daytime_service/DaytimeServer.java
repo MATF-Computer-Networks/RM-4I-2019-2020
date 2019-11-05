@@ -8,7 +8,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
 
-public class DaytimeServer {
+class DaytimeServer {
 
 	public final static int DEFAULT_PORT = 8765;
 	

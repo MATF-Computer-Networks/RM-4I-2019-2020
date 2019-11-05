@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
 // Counts how many files contain given keyword
-public class MatchCounter implements Callable<Integer> {
+class MatchCounter implements Callable<Integer> {
 
 	private Path directory;
 	private String keyword;

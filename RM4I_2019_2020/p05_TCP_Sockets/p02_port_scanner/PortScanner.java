@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Date;
 
-public class PortScanner {
+class PortScanner {
 
 	public static void main(String[] args) {
 		String host = "alas.matf.bg.ac.rs";
@@ -24,7 +24,6 @@ public class PortScanner {
 				break;
 			} catch (IOException ex) {
 				// Ignored, no server listening on port
-				// or connection refused
 			}
 		}
 

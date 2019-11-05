@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
-public class EchoClient {
+class EchoClient {
 
 	// To start multiple clients in IntelliJ IDEA,
 	// open Run Configurations for EchoClient and
@@ -14,7 +14,7 @@ public class EchoClient {
 		String hostname = "localhost";
 
 		System.err.println("Connecting to " + hostname);
-		try (Socket sock = new Socket(hostname, 4444);
+		try (Socket sock = new Socket(hostname, EchoServer.DEFAULT_PORT);
 			 BufferedReader networkIn =
 				 new BufferedReader(new InputStreamReader(sock.getInputStream(), StandardCharsets.UTF_8));
 			 BufferedWriter networkOut =

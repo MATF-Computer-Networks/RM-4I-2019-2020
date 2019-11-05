@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class SourceReader {
+class SourceReader {
 
 	private static final String URL_STRING = "http://poincare.matf.bg.ac.rs/~ivan_ristovic";
 	

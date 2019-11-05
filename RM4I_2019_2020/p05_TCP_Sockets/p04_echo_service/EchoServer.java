@@ -1,14 +1,10 @@
 package p04_echo_service;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class EchoServer {
+class EchoServer {
 
 	public final static int DEFAULT_PORT = 4444;
 
@@ -29,6 +25,10 @@ public class EchoServer {
 				// then we will create threads continuously and not only when
 				// a new client appears - very important
 				Socket client = server.accept();
+
+				// Also, we cannot use try-with-resources block on client socket
+				// because it would be closed immediately after dispatching a
+				// thread. We leave the thread to close the socket.
 
 				System.err.println("Client accepted! Dispatching thread...");
 				new Thread(new ClientHandlerRunnable(client)).start();

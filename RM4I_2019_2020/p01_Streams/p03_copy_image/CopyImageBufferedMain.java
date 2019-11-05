@@ -5,7 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class CopyImageBufferedMain {
+class CopyImageBufferedMain {
 
     public static void main(String[] args) {
         try {

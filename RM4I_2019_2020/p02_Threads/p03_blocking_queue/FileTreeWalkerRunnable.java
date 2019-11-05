@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.BlockingQueue;
 
-public class FileTreeWalkerRunnable implements Runnable {
+class FileTreeWalkerRunnable implements Runnable {
 
     // Since we need a way of stopping the threads, our directory walker will put this
     // special value in the queue, so the threads know when to stop working.

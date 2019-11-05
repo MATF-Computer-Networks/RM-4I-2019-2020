@@ -2,7 +2,7 @@ package p02_bank;
 
 import java.util.Arrays;
 
-public class SynchronizedBank implements IBank {
+class SynchronizedBank implements IBank {
     private final int[] accounts;
 
 

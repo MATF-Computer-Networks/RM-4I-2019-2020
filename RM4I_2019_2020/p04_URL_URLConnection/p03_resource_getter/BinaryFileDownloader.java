@@ -4,7 +4,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class BinaryFileDownloader {
+class BinaryFileDownloader {
 
 	public static void main(String[] args) {
 		try {

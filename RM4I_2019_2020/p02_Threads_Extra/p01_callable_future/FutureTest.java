@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
-public class FutureTest {
+class FutureTest {
 
 	public static void main(String[] args) {
 		Scanner in = new Scanner(System.in);

@@ -3,7 +3,7 @@ package p02_protocols;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class ProtocolTester {
+class ProtocolTester {
 
 	public static void main(String[] args) {
 

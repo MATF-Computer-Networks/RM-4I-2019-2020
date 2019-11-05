@@ -3,7 +3,7 @@ package p03_copy_image;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 
-public class CopyImageMain {
+class CopyImageMain {
 
     public static void main(String[] args) {
         try {

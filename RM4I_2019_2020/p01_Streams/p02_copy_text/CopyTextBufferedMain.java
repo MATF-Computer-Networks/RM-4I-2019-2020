@@ -2,7 +2,7 @@ package p02_copy_text;
 
 import java.io.*;
 
-public class CopyTextBufferedMain {
+class CopyTextBufferedMain {
 
     public static void main(String[] args) {
         try {
