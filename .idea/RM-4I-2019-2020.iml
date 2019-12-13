@@ -11,6 +11,8 @@
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p05_TCP_Sockets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p06_TCP_Sockets" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p07_SSL_Sockets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p08_UDP_Sockets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/RM4I_2019_2020/p09_NonBlocking_IO" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
