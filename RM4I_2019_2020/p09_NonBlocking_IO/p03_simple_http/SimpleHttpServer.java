@@ -11,6 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,27 +19,23 @@ import java.util.Map;
 class SimpleHttpServer {
 
 	public static void main(String[] args) throws IOException {
-
-		// Find all files inside public_html directory
-		Map<Path, FileInfo> cache = new HashMap<>();
-		for (Path p : Files.newDirectoryStream(Paths.get("RM4I_2019_2020/p09_NonBlocking_IO/p03_simple_http/public_html"))) {
-			// For simplification, not going deeper into directory tree
-			if (Files.isRegularFile(p))
-				cache.put(p.getFileName(), FileInfo.get(p, StandardCharsets.UTF_8));
-		}
-
-		SimpleHttpServer server = new SimpleHttpServer(cache, 12345);
+		Path publicHtmlDir = Paths.get("RM4I_2019_2020/p09_NonBlocking_IO/p03_simple_http/public_html");
+		SimpleHttpServer server = new SimpleHttpServer(publicHtmlDir, 12345, 5);
 		server.startLogic();
 	}
 
-	
-	private Map<String, ByteBuffer> contentBuffers;
-	private int port;
-	
-	
-	private SimpleHttpServer(Map<Path, FileInfo> cache, int port) {
+
+	private final Path publicHtmlDir;
+	private final int maxCacheAliveTime;
+	private final int port;
+	private Map<String, ByteBuffer> responseBuffers;
+
+
+	private SimpleHttpServer(Path publicHtmlDir, int port, int cacheAliveSeconds) throws IOException {
+		this.publicHtmlDir = publicHtmlDir;
 		this.port = port;
-		this.fillLocalCache(cache);
+		this.maxCacheAliveTime = cacheAliveSeconds * 1000;
+		this.fillLocalCache(this.publicHtmlDir);
 	}
 
 
@@ -52,8 +49,18 @@ class SimpleHttpServer {
 
 			System.err.println("Server started!");
 
+			long lastCacheUpdateTime = System.currentTimeMillis();
+			int clients = 0;
+
 			//noinspection InfiniteLoopStatement
 			while (true) {
+
+				// Update cache if there are no clients (we can't remove buffers in use)
+				if (clients == 0 && System.currentTimeMillis() - lastCacheUpdateTime >= this.maxCacheAliveTime) {
+					System.err.println("Updating server cache...");
+					this.fillLocalCache(this.publicHtmlDir);
+					lastCacheUpdateTime = System.currentTimeMillis();
+				}
 
 				selector.select();
 
@@ -68,32 +75,50 @@ class SimpleHttpServer {
 							channel.configureBlocking(false);
 							channel.register(selector, SelectionKey.OP_READ);
 							System.err.println("Client found. Awaiting request...");
+							clients++;
 						} else if (key.isReadable()) {
 							SocketChannel channel = (SocketChannel)key.channel();
 							ByteBuffer buffer = ByteBuffer.allocate(4096);
+
+							// FIXME: No guarantee that read() will finish all of
+							// the work in one call, for simplification leaving it be
 							channel.read(buffer);
+
+							// Showing the collect() method, this can be done with substring
+							// until newline
 							String filename = new String(buffer.array())
 									.codePoints()
 									.takeWhile(c -> c > 32 && c < 127)
-									.collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+									.collect(StringBuilder::new,
+											 StringBuilder::appendCodePoint,
+											 StringBuilder::append)
 									.toString()
 									;
+
 							System.err.println("Server received request for file: " + filename);
-							if (this.contentBuffers.containsKey(filename))
-								key.attach(this.contentBuffers.get(filename).duplicate());
+							if (this.responseBuffers.containsKey(filename))
+								key.attach(this.responseBuffers.get(filename).duplicate());
 							else
-								key.attach(this.contentBuffers.get("404").duplicate());
+								key.attach(this.responseBuffers.get("404").duplicate());
+
+							// Change mode to write - now we will send response to this client
 							key.interestOps(SelectionKey.OP_WRITE);
 						} else if(key.isWritable()) {
 							SocketChannel channel = (SocketChannel)key.channel();
 							ByteBuffer buffer = (ByteBuffer)key.attachment();
-							if (buffer.hasRemaining())
+							if (buffer.hasRemaining()) {
+								System.err.println("Writing to client...");
 								channel.write(buffer);
-							else
+							} else {
+								// Per HTTP, if we are done with response, we close connection
+								System.err.println("Finished working with the client.");
 								channel.close();
+								clients--;
+							}
 						}
 					} catch(IOException ex) {
 						key.cancel();
+						clients--;
 						try {
 							key.channel().close();
 						} catch (IOException cex) {
@@ -106,33 +131,45 @@ class SimpleHttpServer {
 	}
 
 
-	private void fillLocalCache(Map<Path, FileInfo> cache) {
+	private void fillLocalCache(Path publicHtmlDir) throws IOException {
+		this.responseBuffers = new HashMap<>();
 
-		// Create buffer cache for each of the files inside public_html directory
-		this.contentBuffers = new HashMap<>();
-		for (Map.Entry<Path, FileInfo> e : cache.entrySet()) {
-			FileInfo fi = e.getValue();
-			ByteBuffer data = fi.getData();
-			String header = "HTTP/1.0 200 OK\r\n"
-					+ "Server: SimpleHTTP v1.0\r\n"
-					+ "Content-length: " + data.limit() + "\r\n"
-					+ "Content-type: " + fi.getMIMEType() + "\r\n\r\n";
-			byte[] headerData = header.getBytes(fi.getEncoding());
-
-			ByteBuffer buffer = ByteBuffer.allocate(headerData.length + data.limit());
-			buffer.put(headerData);
-			buffer.put(data);
-			buffer.flip();
-			this.contentBuffers.put(e.getKey().getFileName().toString(), buffer);
+		// Find all files inside `public_html` directory
+		// FIXME: For simplification, not going deeper into directory tree now
+		for (Path p : Files.newDirectoryStream(publicHtmlDir)) {
+			if (Files.isRegularFile(p)) {
+				FileInfo fi = FileInfo.get(p, StandardCharsets.UTF_8);
+				ByteBuffer responseBuffer = this.createResponseBuffer(fi);
+				this.responseBuffers.put(p.getFileName().toString(), responseBuffer);
+			}
 		}
 
 		// Create a special buffer to use when requested file is not found
+		ByteBuffer nfBuffer = this.createNotFoundBuffer();
+		this.responseBuffers.put("404", nfBuffer);
+	}
+
+	private ByteBuffer createResponseBuffer(FileInfo fi) {
+		ByteBuffer data = fi.getData();
+		String header = "HTTP/1.0 200 OK\r\n"
+				      + "Server: SimpleHTTP v1.0\r\n"
+					  + "Content-length: " + data.limit() + "\r\n"
+					  + "Content-type: " + fi.getMIMEType() + "\r\n\r\n";
+		byte[] headerData = header.getBytes(fi.getEncoding());
+		ByteBuffer buf = ByteBuffer.allocate(headerData.length + data.limit());
+		buf.put(headerData);
+		buf.put(data);
+		buf.flip();
+		return buf;
+	}
+
+	private ByteBuffer createNotFoundBuffer() {
 		String nfHeader = "HTTP/1.0 404 Not found\r\n"
-				+ "Server: SimpleHTTP v1.0\r\n\r\n";
+						+ "Server: SimpleHTTP v1.0\r\n\r\n";
 		byte[] nfHeaderData = nfHeader.getBytes(StandardCharsets.UTF_8);
 		ByteBuffer nfBuffer = ByteBuffer.allocate(nfHeaderData.length);
 		nfBuffer.put(nfHeaderData);
 		nfBuffer.flip();
-		this.contentBuffers.put("404", nfBuffer);
+		return nfBuffer;
 	}
 }

@@ -32,11 +32,10 @@ class IntgenServer {
 
 				selector.select();
 
-				Set<SelectionKey> readyKeys = selector.selectedKeys();
-				Iterator<SelectionKey> iterator = readyKeys.iterator();
-				while (iterator.hasNext()) {
-					SelectionKey key = iterator.next();
-					iterator.remove();
+				Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+				while (it.hasNext()) {
+					SelectionKey key = it.next();
+					it.remove();
 					try {
 						if (key.isAcceptable()) {
 							ServerSocketChannel server = (ServerSocketChannel)key.channel();
@@ -44,13 +43,18 @@ class IntgenServer {
 							System.out.println("Accepted connection from " + client);
 							client.configureBlocking(false);
 							SelectionKey clientKey = client.register(selector, SelectionKey.OP_WRITE);
+
+							// By default we start by sending 0
 							ByteBuffer output = ByteBuffer.allocate(4);
 							output.putInt(0);
 							output.flip();
+
 							clientKey.attach(output);
 						} else if (key.isWritable()) {
 							SocketChannel client = (SocketChannel)key.channel();
 							ByteBuffer output = (ByteBuffer)key.attachment();
+
+							// If current number is sent, fill buffer with next
 							if (!output.hasRemaining()) {
 								output.rewind();
 								int value = output.getInt();
@@ -58,6 +62,8 @@ class IntgenServer {
 								output.putInt(value + 1);
 								output.flip();
 							}
+
+							// Write data anyway, since client is ready for write()
 							client.write(output);
 						}
 					} catch (IOException ex) {

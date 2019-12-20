@@ -25,6 +25,8 @@ class ChargenClientBlocking {
 			// We’ve got a pretty good idea that the lines of text are 74 ASCII 
 			// characters long (72 printable characters followed by a carriage 
 			// return/linefeed pair).
+			// read() and write() methods on buffers work with smart buffers rather
+			// than byte arrays. Those smart buffers are part of new Java I/O.
 			ByteBuffer buffer = ByteBuffer.allocate(74);
 			
 			// There are ways to extract a byte array from a ByteBuffer that can then be
@@ -41,6 +43,7 @@ class ChargenClientBlocking {
 				// connected to System.out. However, before you do that you have to
 				// "flip" (not literally) the buffer so that the output channel starts
 				// from the beginning of the data that was read rather than the end
+				// These operations will be explained in the non-blocking client example.
 				buffer.flip();
 				out.write(buffer);
 

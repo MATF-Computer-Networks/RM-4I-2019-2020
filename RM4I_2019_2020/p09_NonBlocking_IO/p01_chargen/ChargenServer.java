@@ -53,6 +53,7 @@ class ChargenServer {
 			// SelectionKey class. For the server socket, the only operation of
 			// interest is OP_ACCEPT; that is, is the server socket channel
 			// ready to accept a new connection?
+			// Channels NEED to be in `non-blocking` mode in order to be registered
 			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 			//noinspection InfiniteLoopStatement
@@ -67,11 +68,14 @@ class ChargenServer {
 				// ready channel. Otherwise it returns an empty set. In either case,
 				// you can loop through this with an iterator
 				Set<SelectionKey> readyKeys = selector.selectedKeys();
-				Iterator<SelectionKey> iterator = readyKeys.iterator();
+				Iterator<SelectionKey> it = readyKeys.iterator();
 				
-				while (iterator.hasNext()) {
-					SelectionKey key = iterator.next();
-					iterator.remove();
+				while (it.hasNext()) {
+					SelectionKey key = it.next();
+
+					// We have to remove the key manually, since selector only adds
+					// keys to the set!
+					it.remove();
 					
 					// If the ready channel is the server channel, the program
 					// accepts a new socket channel and adds it to the selector.
