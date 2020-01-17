@@ -64,57 +64,19 @@ class SimpleHttpServer {
 
 				selector.select();
 
-				Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
-				while(keys.hasNext()) {
-					SelectionKey key = keys.next();
-					keys.remove();
+				Iterator<SelectionKey> it = selector.selectedKeys().iterator();
+				while(it.hasNext()) {
+					SelectionKey key = it.next();
+					it.remove();
 					try {
 						if (key.isAcceptable()) {
-							ServerSocketChannel server = (ServerSocketChannel)key.channel();
-							SocketChannel channel = server.accept();
-							channel.configureBlocking(false);
-							channel.register(selector, SelectionKey.OP_READ);
-							System.err.println("Client found. Awaiting request...");
+							this.acceptClient(key, selector);
 							clients++;
 						} else if (key.isReadable()) {
-							SocketChannel channel = (SocketChannel)key.channel();
-							ByteBuffer buffer = ByteBuffer.allocate(4096);
-
-							// FIXME: No guarantee that read() will finish all of
-							// the work in one call, for simplification leaving it be
-							channel.read(buffer);
-
-							// Showing the collect() method, this can be done with substring
-							// until newline
-							String filename = new String(buffer.array())
-									.codePoints()
-									.takeWhile(c -> c > 32 && c < 127)
-									.collect(StringBuilder::new,
-											 StringBuilder::appendCodePoint,
-											 StringBuilder::append)
-									.toString()
-									;
-
-							System.err.println("Server received request for file: " + filename);
-							if (this.responseBuffers.containsKey(filename))
-								key.attach(this.responseBuffers.get(filename).duplicate());
-							else
-								key.attach(this.responseBuffers.get("404").duplicate());
-
-							// Change mode to write - now we will send response to this client
-							key.interestOps(SelectionKey.OP_WRITE);
+							this.readRequestFromClient(key);
 						} else if(key.isWritable()) {
-							SocketChannel channel = (SocketChannel)key.channel();
-							ByteBuffer buffer = (ByteBuffer)key.attachment();
-							if (buffer.hasRemaining()) {
-								System.err.println("Writing to client...");
-								channel.write(buffer);
-							} else {
-								// Per HTTP, if we are done with response, we close connection
-								System.err.println("Finished working with the client.");
-								channel.close();
+							if (this.writeToClient(key))
 								clients--;
-							}
 						}
 					} catch(IOException ex) {
 						key.cancel();
@@ -130,6 +92,66 @@ class SimpleHttpServer {
 		}
 	}
 
+	private void acceptClient(SelectionKey key, Selector selector) throws IOException {
+		ServerSocketChannel server = (ServerSocketChannel)key.channel();
+		SocketChannel client = server.accept();
+		client.configureBlocking(false);
+		client.register(selector, SelectionKey.OP_READ);
+		System.err.println("Client accepted.");
+	}
+
+	private void readRequestFromClient(SelectionKey key) throws IOException {
+		SocketChannel client = (SocketChannel)key.channel();
+
+		// If we are reading from this client for the first time,
+		// we create a buffer for his request
+		ByteBuffer buf = (ByteBuffer)key.attachment();
+		if (buf == null) {
+			buf = ByteBuffer.allocate(4096);
+			key.attach(buf);
+		}
+
+		System.err.println("Reading from client...");
+		client.read(buf);
+
+		String maybeCompleteRequest = new String(buf.array());
+		if (maybeCompleteRequest.contains("\r\n\r\n")) {
+			// Showing the collect() method, this can be done like in UDP example
+			String filename = maybeCompleteRequest
+					.codePoints()
+					.takeWhile(c -> c > 32 && c < 127)
+					.collect(StringBuilder::new,
+		 					StringBuilder::appendCodePoint,
+		 					StringBuilder::append)
+					.toString()
+					;
+			System.err.println("Server received request for file: " + filename);
+
+			// Get the response buffer
+			if (this.responseBuffers.containsKey(filename))
+				key.attach(this.responseBuffers.get(filename).duplicate());
+			else
+				key.attach(this.responseBuffers.get("404").duplicate());
+
+			// Change mode to write - now we will send response to this client
+			key.interestOps(SelectionKey.OP_WRITE);
+		}
+	}
+
+	private boolean writeToClient(SelectionKey key) throws IOException {
+		SocketChannel channel = (SocketChannel)key.channel();
+		ByteBuffer buffer = (ByteBuffer)key.attachment();
+		if (buffer.hasRemaining()) {
+			System.err.println("Writing to client...");
+			channel.write(buffer);
+			return false;
+		} else {
+			// Per HTTP, if we are done with response, we close connection
+			System.err.println("Finished working with the client.");
+			channel.close();
+			return true;
+		}
+	}
 
 	private void fillLocalCache(Path publicHtmlDir) throws IOException {
 		this.responseBuffers = new HashMap<>();

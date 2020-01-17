@@ -2,6 +2,9 @@ package p03_simple_http;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 class SimpleHttpClient {
 
@@ -10,7 +13,7 @@ class SimpleHttpClient {
 		// Clients can be written using normal TCP sockets
 
 		try (Socket s = new Socket("localhost", 12345);
-			 PrintWriter out = new PrintWriter(s.getOutputStream(), true);
+			 PrintWriter out = new PrintWriter(s.getOutputStream());
 			 BufferedReader in = new BufferedReader(
 			 		new InputStreamReader(
 			 			new BufferedInputStream(s.getInputStream())
@@ -20,8 +23,15 @@ class SimpleHttpClient {
 			System.err.println("Connected to server.");
 
 			// Oversimplified HTTP request, normally we would send proper headers
-			out.println("index.html");
-			//out.println("serverfile.txt");
+			out.print("index.html\r\n\r\n");
+			//out.print("serverfile.txt\r\n\r\n");
+			/*out.print(
+					IntStream.range(0, 2048)
+							 .mapToObj(i -> "a")
+							 .collect(Collectors.joining(""))
+							+ "\r\n\r\n"
+			);*/
+			out.flush();
 
 			// Read response
 			String line;
